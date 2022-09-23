@@ -1,0 +1,9 @@
+[flake8]
+exclude = .git,__pycache__,.venv
+ignore = E501,  # line too long, rely on black for reformatting of these, since sometimes URLs or comments can be longer
+    W503,  # Outdated: line break before binary operator, this is now considered best practice, see https://www.flake8rules.com/rules/W503.html
+    W504,  # Line break occurred after a binary operator
+    F841,  # Allow capitalized variable names, necessary for e.g., `X_train = get_train_data()`
+    E221,  # Multiple spaces before operator
+    F401,  # Module imported but unused - covered by Pylint
+    F811  # Redefinition of unused name from line n - covered by Pylint

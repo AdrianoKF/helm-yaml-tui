@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "helm-yaml-tui"
+version = "0.1.0"
+description = ""
+authors = ["Adrian Rumpold <a.rumpold@gmail.com>"]
+license = "MIT"
+packages = [{include = "helm_yaml_tui", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+PyYAML = "^6.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.8.0"
+isort = "^5.10.1"
+flake8 = "^5.0.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+# Source https://github.com/psf/black#configuration-format
+include = "\\.pyi?$"
+line-length = 88
+target-version = ["py39"]
+
+# Black-compatible settings for isort
+# See https://black.readthedocs.io/en/stable/compatible_configs.html
+[tool.isort]
+line_length = "88"
+profile = "black"
