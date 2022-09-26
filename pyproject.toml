@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "helm-yaml-tui"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Adrian Rumpold <a.rumpold@gmail.com>"]
 license = "MIT"
