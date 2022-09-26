@@ -9,11 +9,16 @@ packages = [{include = "helm_yaml_tui", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 PyYAML = "^6.0"
+textual = "^0.1.18"
+"ruamel.yaml" = "^0.17.21"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"
 isort = "^5.10.1"
 flake8 = "^5.0.4"
+
+[tool.poetry.scripts]
+helm-yaml-tui = "helm_yaml_tui.main:main"
 
 [build-system]
 requires = ["poetry-core"]
