@@ -30,4 +30,7 @@ $ helm repo update
 $ helm template loki --namespace=loki grafana/loki-simple-scalable | pipx run helm-yaml-tui
 ```
 
+<script id="asciicast-bHAfsPFXsCakImZdmxQLlE06q" src="https://asciinema.org/a/bHAfsPFXsCakImZdmxQLlE06q.js" async></script>
+<noscript>
 [![asciicast](https://asciinema.org/a/bHAfsPFXsCakImZdmxQLlE06q.svg)](https://asciinema.org/a/bHAfsPFXsCakImZdmxQLlE06q)
+</noscript>
