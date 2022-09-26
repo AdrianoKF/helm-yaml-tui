@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "helm-yaml-tui"
-version = "0.1.2"
+version = "0.1.3"
 description = "TUI navigator for rendered Helm YAML output with tree navigation and syntax highlighting"
 authors = ["Adrian Rumpold <a.rumpold@gmail.com>"]
 license = "MIT"
