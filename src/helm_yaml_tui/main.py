@@ -9,32 +9,43 @@ from rich.console import RenderableType
 from rich.syntax import Syntax
 from rich.traceback import Traceback
 from textual import events
-from textual.app import App
-from textual.widgets import DirectoryTree, FileClick, ScrollView
+from textual.app import App, ComposeResult
+from textual.widgets import DirectoryTree, Static, Footer, Header
+from textual.reactive import var
+from textual.containers import Horizontal, Vertical
 
 from helm_yaml_tui.loader import HelmTemplateLoader
 
 
 class HelmYamlTui(App):
+    CSS_PATH = "helm_yaml_tui.css"
+    BINDINGS = [
+        ("q", "quit", "Quit"),
+        ("b", "toggle_browser", "Toggle File Browser"),
+    ]
+
+    show_tree = var(True)
+
     def __init__(self, directory: Path, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.directory = directory
 
-    async def on_load(self) -> None:
-        await self.bind("q", "quit", "Quit")
-
-    async def on_shutdown_request(self, event: events.ShutdownRequest) -> None:
+    def on_shutdown_request(self, event: events.ShutdownRequest) -> None:
         self.directory.unlink()
-        return await super().on_shutdown_request(event)
+        super().on_shutdown_request(event)
 
-    async def on_mount(self) -> None:
-        self.tree = DirectoryTree(str(self.directory), "Files")
-        self.body = ScrollView()
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Horizontal(
+            Vertical(DirectoryTree(str(self.directory)), id="tree-view"),
+            Vertical(Static(id="file", expand=True), id="file-view"),
+        )
+        yield Footer()
 
-        await self.view.dock(ScrollView(self.tree), edge="left", size=40)
-        await self.view.dock(self.body, edge="right")
+    def on_mount(self, event: events.Mount) -> None:
+        self.query_one(DirectoryTree).focus()
 
-    async def handle_file_click(self, message: FileClick) -> None:
+    def on_directory_tree_file_click(self, message: DirectoryTree.FileClick) -> None:
         """A message sent by the directory tree when a file is clicked."""
 
         syntax: RenderableType
@@ -51,8 +62,17 @@ class HelmYamlTui(App):
             # Possibly a binary file
             # For demonstration purposes we will show the traceback
             syntax = Traceback(theme="monokai", width=None, show_locals=True)
-        self.app.sub_title = os.path.basename(message.path)
-        await self.body.update(syntax)
+
+        self.app.sub_title = str(Path(message.path).relative_to(self.directory))
+
+        code = self.query_one("#file", Static)
+        code.update(syntax)
+
+    def action_toggle_browser(self):
+        self.show_tree = not self.show_tree
+
+    def watch_show_tree(self, show_tree: bool) -> None:
+        self.set_class(show_tree, "-show-tree")
 
 
 def main():
@@ -84,7 +104,7 @@ def main():
     if len(contents) == 1:
         yaml_dir = contents[0]
 
-    HelmYamlTui.run(directory=yaml_dir)
+    HelmYamlTui(directory=yaml_dir).run()
 
 
 if __name__ == "__main__":
